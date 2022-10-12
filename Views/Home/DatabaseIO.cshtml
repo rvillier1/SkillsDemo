@@ -1,0 +1,139 @@
+﻿@model List<SkillsDemo.Data.Employee>
+@{
+    ViewData["Title"] = "Database I/O";
+    Layout = null;
+}
+<style>
+    h1 {
+        color: Green;
+    }
+
+    div.scroll {
+        height: 500px;
+        overflow-y: scroll;
+        text-align: justify;
+    }
+
+    .tableFixHead {
+        /*overflow-y: scroll;
+        height: 600px;*/
+        width: 100%;
+        height: 700px;
+        overflow-y: scroll;
+    }
+
+    .th1 {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .th2 {
+        position: sticky;
+        top: 35px;
+        z-index: 1000;
+    }
+
+    /* table {
+        border-collapse: collapse;
+        width: 100%;
+    }*/
+
+    th,
+    td {
+        padding: 8px 16px;
+        border: 1px solid #ccc;
+    }
+
+    th {
+        background: #eee;
+    }
+</style>
+<table style="width:100%">
+    <tr>
+        <td align="center" class="pb10">
+            <h3>@ViewBag.Title</h3>
+        </td>
+    </tr>    
+</table>
+<button class="btn btn-primary" type="button" id="AddNewEmployee">
+    Add New
+</button>
+
+<div class="tableFixHead">
+    <table style="padding: 0 0 0 0; margin: 0 0 0 0" border="1">
+        <thead>           
+            <tr>
+                <th></th>
+                <th class="th1" style="margin-bottom: 5px; cursor: pointer;" onclick="sortTable('FirstName')">
+                    <label class="caption pl10" style="font-weight: bold; cursor: pointer;width: 100px">
+                        First Name
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom: 5px; cursor: pointer;" onclick="sortTable('LastName')">
+                    <label class="caption pl10" style="font-weight: bold; cursor: pointer; width: 100px">
+                        Last Name
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom: 5px; cursor: pointer;" onclick="sortTable('Title')">
+                    <label class="caption pl10" style="font-weight: bold; cursor: pointer; width: 100px">
+                        Title
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom: 5px; cursor: pointer;" onclick="sortTable('BirthDate')">
+                    <label class="caption pl10" style="font-weight: bold; cursor: pointer; width: 100px">
+                        Birth Date
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom: 5px; cursor: pointer;" onclick="sortTable('HireDate')">
+                    <label class="caption pl10" style="font-weight: bold; cursor: pointer; width: 100px">
+                        Hire Date
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom:5px">
+                    <label class="caption pl10" style="font-weight:bold;width:100px">
+                        Address
+                    </label>
+                </th>
+                <th class="th1" style="margin-bottom:5px">
+                    <label class="caption pl10" style="font-weight:bold;width:100px">
+                        Phone
+                    </label>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="CovidRow" id="@item.EmployeeId">
+                    <td style="width:100px">
+                        <a href="#" class="IODelete" id="@item.EmployeeId"><img src="~/images/delete.png" style="width:25px;height:25px" /> </a>
+                        <a href="#" class="IOEdit" id="@item.EmployeeId"><img src="~/images/edit.png" style="width:25px;height:25px" /></a>
+                    </td>
+                    <td style="margin-bottom:5px">
+                        @item.FirstName
+                    </td>
+                    <td style="margin-bottom:5px">
+                        @item.LastName
+                    </td>
+                    <td style="margin-bottom:5px">                        
+                        @item.Title
+                    </td>
+                    <td style="margin-bottom: 5px;text-align: center">
+                        @Convert.ToDateTime(item.BirthDate).ToString("MM/dd/yyyy")
+                    </td>
+                    <td style="margin-bottom: 5px; text-align: center">
+                        @Convert.ToDateTime(item.HireDate).ToString("MM/dd/yyyy")
+                        
+                    </td>
+                    <td style="margin-bottom: 5px; text-align: center">
+                        @item.Address<br />@item.City @item.Region<br />@item.PostalCode
+                    </td>
+                    <td style="margin-bottom: 5px; text-align: center">
+                        @item.HomePhone<br />Ext @item.Extension
+                    </td>                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
