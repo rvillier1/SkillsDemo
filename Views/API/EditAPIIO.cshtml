@@ -1,0 +1,92 @@
+﻿@model List<SkillsDemo.Model.EmployeeForDisplay>
+
+@{
+    ViewBag.Title = "API IO Edit";
+    Layout = null;
+}
+
+@using (Html.BeginForm("EmployeeUpdates", "API", FormMethod.Post, new { @id = "FormEmployeeUpdates", @name = "FormEmployeeUpdates" }))
+{
+    @foreach (var item in Model)
+    {
+        <input name="EmployeeId" type="hidden" value="@item.employeeId" />
+    <table >
+        <tr>
+            <td colspan="4" style="text-align:center">
+                <label class="caption pl10" style="font-weight:bold;">All fileds with an <font style="color:red">*</font> are required</label>
+            </td>
+        </tr>
+        <tr style="margin-bottom:50px">
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px"><font style="color:red">*</font> First Name</label><br/>            
+                <input id="FirstName" name="FirstName" type="text" value="@item.firstName"/>
+            </td>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px"><font style="color:red">*</font> Last Name</label><br />
+                    <input id="LastName" name="LastName" type="text" value="@item.lastName" />
+            </td>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px">Title</label><br />
+                <input name="Title" type="text" value="@item.title" />
+            </td>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px"><font style="color:red">*</font> DOB</label><br />
+                @{
+                    var bdate = "";
+                    if (item.birthDate != null && item.birthDate.ToString().Length != 0)
+                    {
+                        bdate = Convert.ToDateTime(item.birthDate).ToString("yyyy-MM-dd");
+                    }
+                }
+                    <input id="BirthDate" name="BirthDate" type="Date" value="@bdate" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px">Address</label><br />
+                <input name="Address" type="text" value="@item.address" />
+            </td>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px">City</label><br/>
+                <input name="City" type="text" value="@item.city" />
+            </td>
+            <td>
+                <label class="caption pl10" style="font-weight:bold;width:100px">State</label><br />
+                @Html.DropDownList("Region", (SelectList)ViewBag.StateList, new { style = "width:150px;important" })                
+            </td>
+            <td>
+                <label class="caption pl10 numbersOnly" style="font-weight:bold;width:100px">Zip</label><br />
+                <input name="PostalCode" type="text" value="@item.postalCode" />
+            </td>
+        </tr>
+        <tr>
+            <td nowrap style="vertical-align:top">
+                <label class="caption pl10" style="font-weight:bold;width:100px">Phone</label><br />
+                <input name="HomePhone" class="numbersOnly phone" type="text" maxlength="10" style="width:125px" value="@item.homePhone" /> Ext <input name="Extension" type="text" style="width:50px" value="@item.extension" />
+            </td>
+            <td style="vertical-align:top">
+                <label class="caption pl10" style="font-weight:bold;width:100px"><font style="color:red">*</font> Hire Date</label><br />
+                @{
+                    var hdate = "";
+                    if (item.hireDate != null && item.hireDate.ToString().Length != 0)
+                    {
+                        hdate = Convert.ToDateTime(item.hireDate).ToString("yyyy-MM-dd");
+                    }
+                }
+                <input id="HireDate" name="HireDate" type="date" value="@hdate" />
+            </td>
+            <td colspan="3">
+                <label class="caption pl10" style="font-weight:bold">Notes</label><br/>            
+                <textarea name="Notes" rows="3" cols="50">@item.notes</textarea>
+            </td>            
+        </tr>
+        <tr>
+            <td colspan="4" style="text-align:center">
+                <button class="btn btn-primary" type="submit">
+                    Submit Changes
+                </button>
+            </td>
+        </tr>
+    </table> 
+    }
+}

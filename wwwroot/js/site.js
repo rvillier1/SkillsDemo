@@ -1,6 +1,6 @@
 ﻿var SortOrder = 'LastName'
 var SortType = 'Asc'
-
+var MenuItemClicked = 'About'
 
 $(document).ready(function () {    
     HideLoading()
@@ -14,16 +14,14 @@ $(document).ready(function () {
 function MainMenuItemClick(linkName) {
     ShowLoading();
     ShowLoading();
+    MenuItemClicked = linkName
     $("#LoadPanel").empty();    
-    if (linkName === "About") {       
+    if (linkName === "About")        
         AboutPage(url)
-    }
-    else if (linkName === "Database I/O") {
+    else if (linkName === "Database I/O") 
         DatabaseIOPage()
-    }
-    if (linkName === "API Example") {
-        APIExamplePage
-    }    
+    if (linkName === "API I/O") 
+        APIExamplePage()
 }
 
 function AboutPage() {
@@ -49,9 +47,15 @@ function DatabaseIOPage() {
 }
 
 function APIExamplePage() {
-    url = BuildUrl("Home/APIExample")
+    url = BuildUrl("API/APIIO") + "?SortOrder=" + SortOrder + "&SortType=" + SortType + "&EmployeeID=0"
     $("#LoadPanel").load(url, null, function (response) {
-
+        $(".IOEdit").unbind();
+        $(".IOEdit").bind("click", DatabaseIOEditClick);
+        $(".IODelete").unbind();
+        $(".IODelete").bind("click", DatabaseIODelete);
+        $("#AddNewEmployee").unbind();
+        $("#AddNewEmployee").bind("click", AddNewEmployee);
+        HideLoading();
     });
 }
 
@@ -61,7 +65,12 @@ function DatabaseIOEditClick() {
 }
 
 function DatabaseIOEdit(id) {    
-    url = BuildUrl("Home/EditDBIO") + "?EmployeeID=" + id
+    if (MenuItemClicked === "Database I/O") 
+        url = BuildUrl("Home/EditDBIO") + "?EmployeeID=" + id    
+    else if (MenuItemClicked === "API I/O") 
+        url = BuildUrl("API/EditAPIIO") + "?EmployeeID=" + id
+    
+    
     $("#LoadPanel").load(url, null, function (response) {
         $(".numbersOnly").unbind();
         $(".numbersOnly").bind("blur", numbersOnly);
@@ -75,15 +84,28 @@ function DatabaseIOEdit(id) {
 }
 
 function DatabaseIODelete() {
+
+    let text = "Are You sure you want to delete?";
+    if (confirm(text) !== true) {
+        return;
+    }
     id = this.id;
-    url = BuildUrl("Home/EmployeeDelete") + "?EmployeeID=" + id    
+    if (MenuItemClicked === "Database I/O")
+        url = BuildUrl("Home/EmployeeDelete") + "?EmployeeID=" + id    
+    else if (MenuItemClicked === "API I/O")
+        url = BuildUrl("API/EmployeeDelete") + "?EmployeeID=" + id    
+        
     $.ajax({
         url: url,
         type: "POST",
         dataType: 'json',        
         success: function (value) {
             HideLoading();
-            DatabaseIOPage()
+            if (MenuItemClicked === "Database I/O")
+                DatabaseIOPage();
+            else if (MenuItemClicked === "API I/O")
+                APIExamplePage();
+            
         },
         error: function (results) {
             HideLoading();
@@ -94,7 +116,6 @@ function DatabaseIODelete() {
 
 function AddNewEmployee() {
     DatabaseIOEdit(0)
-
 }
 
 function EmployeeUpdates() {
@@ -108,7 +129,13 @@ function EmployeeUpdates() {
     }
     ShowLoading();
     ShowLoading();
-    url = BuildUrl("Home/EmployeeUpdates")
+    if (MenuItemClicked === "Database I/O")
+        url = BuildUrl("Home/EmployeeUpdates")
+    else if (MenuItemClicked === "API I/O")
+        url = BuildUrl("API/EmployeeUpdates")
+
+
+
     var valdata = $("#FormEmployeeUpdates").serialize();
 
     $.ajax({
@@ -162,7 +189,12 @@ function sortTable(n) {
             SortType = 'Asc'
     }
     SortOrder = n
-    DatabaseIOPage()
+
+    if (MenuItemClicked === "Database I/O")
+        DatabaseIOPage()
+    else if (MenuItemClicked === "API I/O")
+        APIExamplePage();
+    
 }
 
 function BuildUrl(text) {
